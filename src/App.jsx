@@ -1,35 +1,58 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useEffect, useState } from "react";
+import List from "./components/List";
+import { v4 as uuidv4 } from "uuid";
+import DateComponent from "./components/DateComponent";
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [tasks, setTasks] = useState(() => {
+    const storedTodos = localStorage.getItem("tasks");
+    if (!storedTodos) {
+      return [];
+    } else {
+      return JSON.parse(storedTodos);
+    }
+  });
+  const [taskTitle, setTaskTitle] = useState("");
+  useEffect(() => {
+    localStorage.setItem("tasks", JSON.stringify(tasks));
+  }, [tasks]);
+
+  const addTask = (e) => {
+    const storedTodos = JSON.parse(localStorage.getItem("tasks"));
+    if (e.key === "Enter" && e.target.value !== "") {
+      setTasks([
+        // ...tasks,
+        ...storedTodos,
+        {
+          id: uuidv4(),
+          title: taskTitle,
+          status: false,
+        },
+      ]);
+      setTaskTitle("");
+    }
+  };
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+    <div className="container">
+      <h1>Note your task</h1>
+      <DateComponent />
+      <div className="input-field">
+        <input
+          type="text"
+          className="task-name"
+          id="taskInp"
+          value={taskTitle}
+          onChange={(e) => setTaskTitle(e.target.value)}
+          onKeyDown={addTask}
+        />
+        <label className="task-label" htmlFor="taskInp">
+          Task name
+        </label>
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+      <List tasks={tasks} />
+    </div>
+  );
 }
 
-export default App
+export default App;
