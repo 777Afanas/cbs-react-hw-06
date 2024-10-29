@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import List from "./components/List";
 import { v4 as uuidv4 } from "uuid";
 import DateComponent from "./components/DateComponent";
+import Counter from "./components/Counter";
 
 function App() {
   const [tasks, setTasks] = useState(() => {
@@ -11,7 +12,11 @@ function App() {
     } else {
       return JSON.parse(storedTodos);
     }
-  });
+    // return {
+    //   unfinishedTask: 0,
+    // };
+  }); 
+
   const [taskTitle, setTaskTitle] = useState("");
   useEffect(() => {
     localStorage.setItem("tasks", JSON.stringify(tasks));
@@ -34,8 +39,7 @@ function App() {
           title: taskTitle,
           status: false,           
           time: {hours, min, sec}, 
-        },
-          // time: {hours, min, sec},      
+        },           
       ]);
       setTaskTitle("");
     }
@@ -45,6 +49,7 @@ function App() {
     <div className="container">
       <h1>Note your task</h1>
       <DateComponent />
+      {/* <Counter unfinishedTask={ tasks.status} /> */}
       <div className="input-field">
         <input
           type="text"
