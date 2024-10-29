@@ -1,8 +1,10 @@
 import { useState } from "react";
 
-export default function Item({ title, id, status }) {
+export default function Item({ title, time, id, status }) {
   const [checked, setChecked] = useState(status);
   const classes = ["todo"];
+
+  // console.log({ sec });
 
   if (checked) {
     classes.push("status");
@@ -44,7 +46,9 @@ export default function Item({ title, id, status }) {
               checked={checked}
               onChange={onUpdateStatus}
             />
-            <span>{title}</span>
+            <span>
+              {title + " " + time.hours + "." + time.min + "." + time.sec}
+            </span> 
             <i className="material-icons red-text" onClick={removeElement}>
               X
             </i>
